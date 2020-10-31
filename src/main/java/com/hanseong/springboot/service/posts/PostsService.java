@@ -2,6 +2,7 @@ package com.hanseong.springboot.service.posts;
 
 import com.hanseong.springboot.domain.posts.Posts;
 import com.hanseong.springboot.domain.posts.PostsRepository;
+import com.hanseong.springboot.web.dto.PostsListResponseDto;
 import com.hanseong.springboot.web.dto.PostsResponseDto;
 import com.hanseong.springboot.web.dto.PostsSaveRequestDto;
 import com.hanseong.springboot.web.dto.PostsUpdateRequestDto;
@@ -9,10 +10,20 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @RequiredArgsConstructor
 @Service
 public class PostsService {
     private final PostsRepository postsRepository;
+
+    @Transactional(readOnly = true)
+    public List<PostsListResponseDto> findAllDesc() {
+        return postsRepository.findAllDesc().stream()
+                .map(PostsListResponseDto::new)
+                .collect(Collectors.toList());
+    }
 
     @Transactional
     public Long save(PostsSaveRequestDto requestDto) {
